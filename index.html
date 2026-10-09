@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Third Year English - AI Study Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --bg-color: #f4f7f6;
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --myanmar-font: 'Padauk', sans-serif;
+            --english-font: 'Roboto', sans-serif;
+            --ai-color: #8e44ad;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--myanmar-font);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-family: var(--english-font);
+            margin-bottom: 20px;
+            padding: 0 15px;
+            font-size: 1.2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+
+        .sidebar ul { list-style: none; }
+
+        .sidebar ul li {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .sidebar ul li:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--secondary-color);
+        }
+
+        .sidebar ul li.active {
+            background-color: rgba(255,255,255,0.15);
+            border-left-color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        .sidebar ul li.ai-tab {
+            color: #9b59b6;
+            font-weight: bold;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            flex: 1;
+            max-width: 1000px;
+        }
+
+        .topic-section {
+            display: none;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .topic-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-family: var(--english-font);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-family: var(--english-font);
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-family: var(--english-font);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p { line-height: 1.8; margin-bottom: 15px; font-size: 1rem; }
+
+        .explanation-box {
+            background-color: #eaf2f8;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .explanation-box ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .explanation-box li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* AI Section Specific */
+        .ai-container {
+            background: #fdfbfe;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .ai-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .ai-controls select, .ai-controls button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: var(--myanmar-font);
+            font-size: 0.95rem;
+        }
+
+        .ai-controls button {
+            background-color: var(--ai-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .ai-controls button:hover { background-color: #6c3483; }
+
+        .question-area {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .question-text {
+            font-family: var(--english-font);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .user-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: var(--english-font);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .check-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--myanmar-font);
+            font-size: 1rem;
+        }
+
+        .check-btn:hover { background-color: #219150; }
+
+        .feedback-area {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f4f9f4;
+            border-left: 5px solid #27ae60;
+            border-radius: 6px;
+        }
+
+        .feedback-area.error {
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+
+        .feedback-area h3 { color: #2c3e50; margin-bottom: 10px; }
+        .feedback-text { font-family: var(--myanmar-font); font-size: 1rem; line-height: 1.6; }
+
+        /* Exercise Section */
+        .exercise-section { margin-top: 30px; }
+        .question-item {
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .answer-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--myanmar-font);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .answer-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-left: 4px solid #1abc9c;
+            border-radius: 4px;
+            font-family: var(--english-font);
+            color: #0e6251;
+        }
+        .answer-content.show { display: block; }
+        .mm-text { font-family: var(--myanmar-font); color: #555; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .sidebar ul { display: flex; flex-wrap: wrap; justify-content: center; }
+            .sidebar ul li { padding: 8px 12px; font-size: 0.85rem; border-left: none; border-bottom: 3px solid transparent; }
+            .sidebar ul li.active { border-left: none; border-bottom-color: var(--secondary-color); }
+            .main-content { margin-left: 0; padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <h2>Third Year English</h2>
+        <ul>
+            <li class="ai-tab active" onclick="showSection('ai-tutor')">🤖 AI Tutor (လေ့ကျင့်ရန်)</li>
+            <li onclick="showSection('vocab-abbr')">1. Common Abbreviations</li>
+            <li onclick="showSection('vocab-similes')">2. Similes</li>
+            <li onclick="showSection('vocab-idioms')">3. Idiomatic Expressions</li>
+            <li onclick="showSection('grammar-third')">4. Third Person Singular</li>
+            <li onclick="showSection('grammar-interrogative')">5. Interrogative</li>
+            <li onclick="showSection('grammar-wish')">6. Wish</li>
+            <li onclick="showSection('grammar-tenses')">7. Tenses</li>
+            <li onclick="showSection('grammar-have-obj')">8. Have + Obj + V3</li>
+            <li onclick="showSection('grammar-have-obj-by')">9. Have + Obj + V3 + by Noun</li>
+            <li onclick="showSection('grammar-modals')">10. Modal Auxiliaries</li>
+            <li onclick="showSection('grammar-deduction')">11. Deduction (must)</li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+        <!-- AI TUTOR SECTION -->
+        <section id="ai-tutor" class="topic-section active">
+            <h1>🤖 AI English Tutor</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">ဒီနေရာမှာ AI ကို အသုံးပြုပြီး မေးခွန်းအသစ်တွေ ဖန်တီးနိုင်ပါတယ်။ သင်ရေးလိုက်တဲ့ အဖြေကို AI က ဆရာတစ်ယောက်လို အမှတ်ပေးစစ်ဆေးပြီး ဘာကြောင့် မှန်တာ/မှားတာလဲ ရှင်းပြပေးပါလိမ့်မယ်။</p>
+               
+            </div>
+
+            <div class="ai-container">
+                <div class="ai-controls">
+                    <label for="ai-topic-select" class="mm-text" style="font-weight: bold;">ခေါင်းစဉ်ရွေးပါ - </label>
+                    <select id="ai-topic-select">
+                        <option value="Common Abbreviations">Common Abbreviations</option>
+                        <option value="Similes">Similes</option>
+                        <option value="Idiomatic Expressions">Idiomatic Expressions</option>
+                        <option value="Third Person Singular">Third Person Singular</option>
+                        <option value="Interrogative">Interrogative</option>
+                        <option value="Wish">Wish</option>
+                        <option value="Tenses">Tenses</option>
+                        <option value="Have + Object + Past Participle">Have + Obj + V3</option>
+                        <option value="Modal Auxiliaries">Modal Auxiliaries</option>
+                        <option value="Deduction (must)">Deduction (must)</option>
+                    </select>
+                    <button id="generate-btn" onclick="generateQuestion()">မေးခွန်းအသစ်ဖန်တီးရန် (Generate)</button>
+                </div>
+
+                <div id="ai-question-area" class="question-area">
+                    <h3 class="mm-text">မေးခွန်း -</h3>
+                    <p id="ai-question-text" class="question-text"></p>
+                    <textarea id="user-answer" class="user-input" placeholder="သင့်အဖြေကို ဒီနေရာမှာ ရေးပါ..."></textarea>
+                    <button id="check-btn" class="check-btn" onclick="checkAnswer()">အဖြေစစ်ဆေးရန် (Check)</button>
+                </div>
+
+                <div id="ai-feedback-area" class="feedback-area">
+                    <h3 class="mm-text">AI ၏ အကြံပြုချက် -</h3>
+                    <p id="ai-feedback-text" class="feedback-text"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Common Abbreviations -->
+        <section id="vocab-abbr" class="topic-section">
+            <h1>1. Common Abbreviations (အတိုကောက်စာလုံးများ)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">အင်္ဂလိပ်ဘာသာစကားတွင် အသုံးများသော အတိုကောက်စာလုံးများဖြစ်သည်။ စာရေးသားရာတွင် အတိုကောက်များကို အသုံးပြုခြင်းဖြင့် စာဖတ်ရှုသူများအတွက် အဆင်ပြေစေပါသည်။</p>
+            </div>
+            <h2>List of Abbreviations</h2>
+            <ul class="mm-text" style="line-height: 2; margin-left: 20px;">
+                <li><strong>A.D.</strong> = in the year of our Lord, after the birth of Christ</li>
+                <li><strong>a.m.</strong> = before noon</li>
+                <li><strong>Ave</strong> = avenue</li>
+                <li><strong>B.C.</strong> = before Christ</li>
+                <li><strong>cf.</strong> = compare</li>
+                <li><strong>e.g.</strong> = for example</li>
+                <li><strong>etc.</strong> = and other things; and so on</li>
+                <li><strong>G.M.T.</strong> = Greenwich Mean Time</li>
+                <li><strong>G.P.</strong> = general practitioner</li>
+                <li><strong>G.P.O.</strong> = General Post Office</li>
+                <li><strong>i.e.</strong> = that is</li>
+                <li><strong>I.Q.</strong> = Intelligence Quotient</li>
+                <li><strong>M.C.</strong> = Master of Ceremonies</li>
+                <li><strong>misc.</strong> = miscellaneous</li>
+                <li><strong>p.m.</strong> = after noon</li>
+                <li><strong>P.O.W.</strong> = Prisoner of War</li>
+                <li><strong>R.I.P.</strong> = May she (he/they) be at rest</li>
+                <li><strong>R.S.V.P.</strong> = Please reply</li>
+                <li><strong>P.T.O.</strong> = Please turn over</li>
+                <li><strong>v.p.p.</strong> = Value Payable Post</li>
+                <li><strong>P.S.</strong> = postscript</li>
+            </ul>
+        </section>
+
+        <!-- 2. Similes -->
+        <section id="vocab-similes" class="topic-section">
+            <h1>2. Similes (ပမာဏ)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">Simile ဆိုသည်မှာ အရာဝတ္ထုတစ်ခုကို အခြားအရာဝတ္ထုတစ်ခုနှင့် "as ... as" သို့မဟုတ် "like" ကို အသုံးပြု၍ နှိုင်းယှဉ်ဖော်ပြခြင်းဖြစ်သည်။ ဥပမာ - "as agile as a cat" (ကြောင်ကဲ့သို့ သွက်လက်သော)။</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Fill in the blanks with suitable similes.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. I want the language in these legal contracts to be as <strong>____</strong> as <strong>____</strong> so that there is no confusion.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as clear as crystal/daylight</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. I expected Danny's student apartment to be a total mess, but it was as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as clean as a new pin / a Dutch oven</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. She was as <strong>____</strong> as <strong>____</strong>. She could think of nothing to say.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as bashful as a schoolgirl</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. These flowers will make a goldsmith cry because they are as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as beautiful as the sunset/rainbow</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. I hope Grandpa wears his hearing aid to dinner tonight because he is as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as deaf as a beetle</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">6. The gymnast was as <strong>____</strong> as <strong>____</strong>, performing acrobatic stunts on the balance beam.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as agile as a cat/monkey</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">7. Being a good student, she is motivated to learn everything. She is as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as eager as a bridegroom</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">8. I had never met her sister but I recognized her immediately because they're as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as alike as two peas</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">9. The exam is approaching. Zaw Zaw is now as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as fidgety as an old maid</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">10. I did have surgery a few months ago, but I'm as <strong>____</strong> as <strong>____</strong> now.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as fit as a fiddle</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">11. The students fell asleep while they were listening to him giving a lecture. It was as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as dull as ditchwater/lead</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">12. The girl is as <strong>____</strong> as <strong>____</strong> to learn everything. She is fully motivated.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as eager as a bridegroom</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">13. Even though the manager is very strict with his employees, he is as <strong>____</strong> as <strong>____</strong> with his wife.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as docile as a lamb</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">14. The two of them seem to have the same faces. They are as <strong>____</strong> as <strong>____</strong>.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as alike as two peas</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">15. The spinster was as <strong>____</strong> as <strong>____</strong> when she was praised for her beauty.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: as bashful as a schoolgirl</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Idiomatic Expressions -->
+        <section id="vocab-idioms" class="topic-section">
+            <h1>3. Idiomatic Expressions (အီဒီယမ်စကားလုံးများ)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">Idiom ဆိုသည်မှာ စကားလုံးတစ်လုံးချင်းစီရဲ့ အဓိပ္ပာယ်နဲ့ မတူဘဲ၊ စကားစုတစ်ခုလုံးအနေနဲ့ အဓိပ္ပာယ်တစ်မျိုး ဖော်ပြတဲ့ စကားအသုံးအနှုန်းတွေဖြစ်ပါတယ်။</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite the following sentences, replacing the underlined words with idiomatic expressions.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. He <strong>telephoned</strong> his friend to confirm the meeting.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: He called up his friend to confirm the meeting.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. She <strong>depended upon</strong> her friends for emotional support during tough times.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She counted on her friends for emotional support during tough times.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. The news <strong>surprised</strong> everyone in the office.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: The news took everyone in the office by surprise.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. They are <strong>discussing</strong> the new project plan in the meeting.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: They are talking over the new project plan in the meeting.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. She <strong>reared</strong> her children with love and dedication.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She brought up her children with love and dedication.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Third Person Singular -->
+        <section id="grammar-third" class="topic-section">
+            <h1>4. Third Person Singular (တတိယလူ ဧကဝုစ်နာမ်)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">He, She, It ကဲ့သို့သော တတိယလူ ဧကဝုစ် (Third Person Singular) နာမ်များအတွက် ကြိယာကို ပြောင်းလဲရေးသားရပါသည်။</p>
+                <ul class="mm-text">
+                    <li>We / You / They → He / She / It</li>
+                    <li>Our / Your / Their → His / Her / Its</li>
+                    <li>Ourselves / Yourselves / Themselves → Himself / Herself / Itself</li>
+                    <li>Plural nouns (eyes, wings) → singular (eye, wing)</li>
+                    <li>are → is, do → does, have → has</li>
+                </ul>
+                <p class="mm-text">ဥပမာ - Computers are powerful machines. → A computer is a powerful machine.</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite the following sentences in the Third Person Singular.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. Igloos are circular snow houses used by Eskimos.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: An igloo is a circular snow house used by an Eskimo.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. Tepees are conical tents that were used in the past by some Native Americans.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: A tepee is a conical tent that was used in the past by a Native American.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. Leopards are as ferocious as tigers.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: A leopard is as ferocious as a tiger.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. Do polar bears live longer than brown bears?</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Does a polar bear live longer than a brown bear?</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. These sugar apples are very expensive fruits.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: This sugar apple is a very expensive fruit.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Interrogative -->
+        <section id="grammar-interrogative" class="topic-section">
+            <h1>5. Interrogative (မေးခွန်းပြုလုပ်ခြင်း)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">ဝါကျများကို မေးခွန်းအဖြစ် ပြောင်းလဲရာတွင် အသုံးပြုသော ပုံစံများ။</p>
+                <ul class="mm-text">
+                    <li>V1 → Do + Sub + V1 ...?</li>
+                    <li>V-s/es → Does + Sub + V1 ...?</li>
+                    <li>V2 / had → Did + Sub + V1 / have ...?</li>
+                    <li>has/have/had + V3 → Has/Have/Had + Sub + V3 ...?</li>
+                    <li>am/is/are/was/were + V-ing → Am/Is/Are/Was/Were + Sub + V-ing ...?</li>
+                    <li>modal + V1 → Modal + Sub + V1 ...?</li>
+                </ul>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite the following sentences in the Interrogative.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. Ko Ko wept bitterly when he did not win the lottery.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Did Ko Ko weep bitterly when he did not win the lottery?</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. Moh Moh suddenly withdrew from the competition.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Did Moh Moh suddenly withdraw from the competition?</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. I can lose weight if I run daily.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Can you lose weight if you run daily?</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. She has never been to Laos before.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Has she ever been to Laos before?</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. A small path leads through the woods.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Does a small path lead through the woods?</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Wish -->
+        <section id="grammar-wish" class="topic-section">
+            <h1>6. Wish (ဆန္ဒပြုခြင်း)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">"Wish" ကို အသုံးပြု၍ လက်ရှိအခြေအနေ သို့မဟုတ် အတိတ်အခြေအနေနှင့် ဆန့်ကျင်ဘက် ဆန္ဒများကို ဖော်ပြရာတွင် အသုံးပြုပါသည်။</p>
+                <ul class="mm-text">
+                    <li>V1 → V2 (did not V1)</li>
+                    <li>is/are + V-ing → were + V-ing</li>
+                    <li>has/have + V3 → had + V3</li>
+                    <li>V2 → had + V3</li>
+                </ul>
+                <p class="mm-text">ဥပမာ - Nyi Nyi is sorry that he is not a doctor. → Nyi Nyi wishes he were a doctor.</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite beginning with I wish, He wishes, She wishes - etc.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. I am sorry that I don't have her mobile phone number.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: I wish I had her mobile phone number.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. It's a pity that I didn't know he was coming.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: I wish I had known he was coming.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. I'm sorry that I said that. She's now upset.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: I wish I hadn't said that. She's now upset.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. Don't come through the kitchen with your dirty boots on.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: I wish you wouldn't come through the kitchen with your dirty boots on.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. Weren't they sorry that they didn't take the time to reflect on their actions?</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Didn't they wish they had taken the time to reflect on their actions?</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Tenses -->
+        <section id="grammar-tenses" class="topic-section">
+            <h1>7. Tenses (ကာလ)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">အင်္ဂလိပ်သဒ္ဒါတွင် အဓိက အသုံးပြုသော ကာလ (Tenses) များ။</p>
+                <ul class="mm-text">
+                    <li><strong>Present Simple:</strong> V1 / V-s/es (always, usually, every day)</li>
+                    <li><strong>Past Simple:</strong> V2 (yesterday, ago, last)</li>
+                    <li><strong>Present Continuous:</strong> am/is/are + V-ing (now, at the moment, Look!)</li>
+                    <li><strong>Past Continuous:</strong> was/were + V-ing (While, When)</li>
+                    <li><strong>Present Perfect:</strong> has/have + V3 (yet, ever, never, just, already, since, for)</li>
+                    <li><strong>Past Perfect:</strong> had + V3 (already, just, after)</li>
+                    <li><strong>Present Perfect Continuous:</strong> has/have been + V-ing (for, since, How long)</li>
+                    <li><strong>Future:</strong> will + V1 / am/is/are going to + V1 (tomorrow, next)</li>
+                </ul>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite using the verbs in brackets in the correct tenses.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. While I (do) the language course, I (meet) lots of young people from all over the world.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: While I was doing the language course, I met lots of young people from all over the world.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. If I (pass) my exam successfully, I (start) an apprenticeship next year.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: If I pass my exam successfully, I will start an apprenticeship next year.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. She (never be) to New Zealand before. She wishes she (have) been born there.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She has never been to New Zealand before. She wishes she had been born there.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. As long as I (get) back home, I realized that I (leave) my wallet at the office.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: As soon as I got back home, I realized that I had left my wallet at the office.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. Our teacher usually (brainstorm) us before he (start) a new lesson.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Our teacher usually brainstorms us before he starts a new lesson.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Have + Object + Past Participle -->
+        <section id="grammar-have-obj" class="topic-section">
+            <h1>8. Have + Object + Past Participle (V3)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">တစ်စုံတစ်ဦးကို အလုပ်တစ်ခုခု လုပ်ခိုင်းသည့်အခါ (Causative Form) အသုံးပြုသော ပုံစံဖြစ်သည်။</p>
+                <p class="mm-text">ပုံစံ - Subject + have/has/had + obj + past participle (V3)</p>
+                <p class="mm-text">ဥပမာ - The teacher has asked the students to learn the poem by heart. → The teacher has had the poem learned by heart.</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite using a 'Have + Obj + Past Participle' construction, omitting the words underlined (the doer).</h2>
+                <div class="question-item">
+                    <div class="question-text">1. My sister is asking her lawyer to vet the contract.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: My sister is having the contract vetted.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. Tom asked the technician to reinstall the Windows system files.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Tom had the Windows system files reinstalled.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. She has asked the dentist to repair her tooth with a crown.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She has had her tooth repaired with a crown.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. He asked the reflexologist to massage his feet yesterday.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: He had his feet massaged yesterday.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. My father will call the plumber to mend the pipes.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: My father will have the pipes mended.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Have + Object + Past Participle + by Noun -->
+        <section id="grammar-have-obj-by" class="topic-section">
+            <h1>9. Have + Object + Past Participle + by Noun</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">အလုပ်လုပ်သူကို ဖော်ပြလိုသောအခါ နောက်ဆုံးတွင် "by + Noun" ထည့်သွင်းရေးသားရပါသည်။</p>
+                <p class="mm-text">ပုံစံ - Subject + have/has/had + obj + V3 + by + Noun</p>
+                <p class="mm-text">ဥပမာ - The teacher has had the poem learned by heart by the students.</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite so that the actor is mentioned at the end of the sentence.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. My sister is asking her colleagues to proofread her dissertation.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: My sister is having her dissertation proofread by her colleagues.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. My friend asked [the staff] to save our photographs in the gallery.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: My friend had our photographs saved in the gallery by the staff.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. She has asked the company to increase her salary.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She has had her salary increased by the company.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. She asked the man to repair the broken pipes in her bathroom.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She had the broken pipes in her bathroom repaired by the man.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. My cousin will ask the typist to send her file to the manager.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: My cousin will have her file sent to the manager by the typist.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Modal Auxiliaries -->
+        <section id="grammar-modals" class="topic-section">
+            <h1>10. Modal Auxiliaries (မော်ဒယ် ကြိယာများ)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">စကားပြောသူ၏ သဘောထား၊ ဖြစ်နိုင်ခြေ၊ တာဝန်၊ ခွင့်ပြုချက် စသည်တို့ကို ဖော်ပြရာတွင် အသုံးပြုသော ကြိယာများ။</p>
+                <ul class="mm-text">
+                    <li>It is possible that / Perhaps → may</li>
+                    <li>is (not) able to / is (not) permitted to → can (not)</li>
+                    <li>was (not) able to → could</li>
+                    <li>is going to / promise to → will</li>
+                    <li>it is advisable for / ought to → should</li>
+                    <li>it is necessary for → must</li>
+                </ul>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Rewrite, replacing the underlined words with the suitable modal auxiliaries.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. <strong>Perhaps</strong> the children are hungry now.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: The children may be hungry now.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. Ohmar <strong>is allowed to</strong> go to the pool party with her cousins.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: Ohmar can go to the pool party with her cousins.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. She <strong>had the ability to</strong> explain things clearly and concisely.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She could explain things clearly and concisely.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. He <strong>promises to</strong> buy his girlfriend a diamond ring for her birthday.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: He will buy his girlfriend a diamond ring for her birthday.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. <strong>It is advisable to</strong> carry an umbrella during the rainy season.</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: You should carry an umbrella during the rainy season.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. Deduction (must) -->
+        <section id="grammar-deduction" class="topic-section">
+            <h1>11. Deduction (must) (ခန့်မှန်းချက်)</h1>
+            <div class="explanation-box">
+                <h3>ရှင်းလင်းချက်</h3>
+                <p class="mm-text">အခြေအနေတစ်ခုမှ ခန့်မှန်းချက် (Deduction) ကို "must" ဖြင့် ဖော်ပြခြင်း။</p>
+                <ul class="mm-text">
+                    <li>Present active: Sub + must + V1</li>
+                    <li>Present passive: Sub + must + be + V3</li>
+                    <li>Past active: Sub + must + have + V3</li>
+                    <li>Past passive: Sub + must + have been + V3</li>
+                </ul>
+                <p class="mm-text">ဥပမာ - Jane walks to work every day. (live) → He must live near his workplace.</p>
+            </div>
+            <div class="exercise-section">
+                <h2>Exercise: Write what you deduce from the statements. Use the cue word.</h2>
+                <div class="question-item">
+                    <div class="question-text">1. The baby is crying a lot. (hungry)</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: The baby must be hungry.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">2. She didn't answer my call yesterday. (busy)</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She must have been busy.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">3. We can see nobody inside. (out)</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: They must be out.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">4. I can't find my wallet now. (drop)</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: I must have dropped it.</div>
+                </div>
+                <div class="question-item">
+                    <div class="question-text">5. She is yawning too much. (late)</div>
+                    <button class="answer-btn" onclick="toggleAnswer(this)">အဖြေကြည့်ရန်</button>
+                    <div class="answer-content">Answer: She must have been late.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // 1. Navigation & Toggle Functions
+        // ==========================================
+        function showSection(sectionId) {
+            document.querySelectorAll('.topic-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.sidebar ul li').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(sectionId)) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function toggleAnswer(button) {
+            const answerDiv = button.nextElementSibling;
+            if (answerDiv.style.display === "block") {
+                answerDiv.style.display = "none";
+                button.textContent = "အဖြေကြည့်ရန်";
+                button.style.backgroundColor = "#3498db";
+            } else {
+                answerDiv.style.display = "block";
+                button.textContent = "အဖြေဖျောက်ရန်";
+                button.style.backgroundColor = "#e74c3c";
+            }
+        }
+
+        // ==========================================
+        // 2. AI Integration Logic
+        // ==========================================
+        
+        // ⚠️ IMPORTANT: ဒီနေရာမှာ သင့်ရဲ့ OpenAI API Key ကို ထည့်ပါ။
+        // Key မရှိရင် "MOCK" လို့ ထားခဲ့ပါ။ (စမ်းသပ်ရန် အတုအယောင် AI ဖြင့် အလုပ်လုပ်ပါမည်)
+        const OPENAI_API_KEY = "MOCK"; 
+
+        let currentQuestion = "";
+        let currentTopic = "";
+
+        async function generateQuestion() {
+            currentTopic = document.getElementById('ai-topic-select').value;
+            const questionArea = document.getElementById('ai-question-area');
+            const questionText = document.getElementById('ai-question-text');
+            const feedbackArea = document.getElementById('ai-feedback-area');
+            const generateBtn = document.getElementById('generate-btn');
+
+            // Reset UI
+            questionArea.style.display = 'block';
+            feedbackArea.style.display = 'none';
+            document.getElementById('user-answer').value = '';
+            questionText.textContent = "မေးခွန်း ဖန်တီးနေပါသည်... (Generating...)";
+            generateBtn.disabled = true;
+
+            if (OPENAI_API_KEY === "MOCK") {
+                // Simulated AI Response for testing
+                setTimeout(() => {
+                    const mockQuestions = {
+                        "Tenses": "Fill in the blank: While I (walk) to the market, I (see) a beautiful rainbow.",
+                        "Similes": "Complete the simile: The gymnast was as agile as a ______.",
+                        "Wish": "Rewrite using 'I wish': I am sorry that I don't have a car.",
+                        "Third Person Singular": "Rewrite in third person singular: Computers are powerful machines."
+                    };
+                    currentQuestion = mockQuestions[currentTopic] || "Generate a sentence using " + currentTopic;
+                    questionText.textContent = currentQuestion;
+                    generateBtn.disabled = false;
+                }, 1000);
+                return;
+            }
+
+            // Real AI API Call
+            try {
+                const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            { role: "system", content: "You are an English teacher for third-year university students in Myanmar. Generate ONE practice question based on the topic provided. Keep it concise. Do not provide the answer." },
+                            { role: "user", content: `Generate a question for the topic: ${currentTopic}` }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+                const data = await response.json();
+                currentQuestion = data.choices[0].message.content;
+                questionText.textContent = currentQuestion;
+            } catch (error) {
+                questionText.textContent = "Error generating question. Please check your API key.";
+                console.error(error);
+            }
+            generateBtn.disabled = false;
+        }
+
+        async function checkAnswer() {
+            const userAnswer = document.getElementById('user-answer').value.trim();
+            const feedbackArea = document.getElementById('ai-feedback-area');
+            const feedbackText = document.getElementById('ai-feedback-text');
+            const checkBtn = document.getElementById('check-btn');
+
+            if (!userAnswer) {
+                alert("ကျေးဇူးပြု၍ အဖြေကို အရင်ရေးပါ။");
+                return;
+            }
+
+            feedbackArea.style.display = 'block';
+            feedbackArea.classList.remove('error');
+            feedbackText.textContent = "စစ်ဆေးနေပါသည်... (Checking...)";
+            checkBtn.disabled = true;
+
+            if (OPENAI_API_KEY === "MOCK") {
+                // Simulated AI Checking
+                setTimeout(() => {
+                    // Simple mock logic
+                    if (currentQuestion.includes("rainbow") && userAnswer.toLowerCase().includes("was walking") && userAnswer.toLowerCase().includes("saw")) {
+                        feedbackText.innerHTML = "<strong>✅ မှန်ပါတယ်!</strong> အတိတ်ကာလမှာ ဖြစ်ပျက်ခဲ့တဲ့ အခြေအနေတွေအတွက် Past Continuous (was walking) နဲ့ Past Simple (saw) ကို မှန်ကန်စွာ အသုံးပြုထားပါတယ်။";
+                    } else {
+                        feedbackText.innerHTML = "<strong>❌ မှားပါတယ်။</strong> ပြန်လည်စဉ်းစားပါ။ အတိတ်ကာလတွင် ဖြစ်ပျက်နေသည့် အခြေအနေတစ်ခုကို ဖော်ပြရန် 'was/were + V-ing' ကို သုံးပြီး၊ ရုတ်တရက်ဖြစ်ပျက်လာသော အခြေအနေအတွက် 'V2' ကို သုံးပါ။ အဖြေမှာ 'While I was walking to the market, I saw a beautiful rainbow.' ဖြစ်ပါတယ်။";
+                    }
+                    checkBtn.disabled = false;
+                }, 1500);
+                return;
+            }
+
+            // Real AI API Call for checking
+            try {
+                const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            { role: "system", content: "You are a strict but helpful English teacher. Evaluate the student's answer. Explain the correct answer in Myanmar language (Burmese). Be encouraging. Keep the feedback concise." },
+                            { role: "user", content: `Topic: ${currentTopic}\nQuestion: ${currentQuestion}\nStudent's Answer: ${userAnswer}\n\nEvaluate this answer. Tell me if it's correct or incorrect, and explain why in Myanmar.` }
+                        ],
+                        temperature: 0.5
+                    })
+                });
+                const data = await response.json();
+                feedbackText.textContent = data.choices[0].message.content;
+            } catch (error) {
+                feedbackArea.classList.add('error');
+                feedbackText.textContent = "Error checking answer. Please check your API key.";
+                console.error(error);
+            }
+            checkBtn.disabled = false;
+        }
+    </script>
+</body>
+</html>
